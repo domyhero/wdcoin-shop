@@ -1,0 +1,118 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- build:js scripts/vendor/modernizr.js -->
+        <script src="bower_components/modernizr/modernizr.js"></script>
+        <!-- endbuild -->
+    </head>
+    <body>
+        <section class="wdc-page page-sell wdc-page-current">
+            <!-- v-class="wdc-page-current: $parent.currnetPage == 'page-sell'"> -->
+            <header>
+              <div class="banner-container">
+                <h1>刀塔传奇超值道具<br>豌豆荚火热开卖！</h1>
+                <img src="" alt="">
+              </div>
+            </header>
+            <div class="main">
+              <div v-repeat="item : list" class="wdc-card wdc-card-sell">
+                <div class="wdc-card-left">
+                  <img src="" alt="">
+                </div>
+                <div class="wdc-card-main">
+                  <!-- use item.title etc here -->
+                  <h2>超级英雄元宝礼包</h2>
+                  <p>砖石100没笔，砖石100没笔，砖石100没笔，砖石100没笔，砖石100没笔，礼包内容</p>
+                  <p>礼包描述，广告语</p>
+                  <ul>
+                    <li>
+                      <dfn>现价</dfn>
+                      <span>240 豌豆荚币</span>
+                      <del>300</del>
+                       <i class="icon icon-marker">八折</i>
+                    </li>
+                    <li>
+                      <dfn>仅剩</dfn>
+                      <span>13</span>件
+                    </li>
+                  </ul>
+                  <button class="w-btn w-btn-primary"
+                    v-on="click: triggerBuy(item)">购买</button>
+                </div>
+              </div>
+            </div>
+
+            <footer>
+              <span v-on="click: switchTo('page-about')">
+                闪电发货，双倍赔付承诺
+              </span>
+              <span v-on="click: switchTo('page-my')">
+                我购买到的商品
+              </span>
+            </footer>
+        </section>
+
+        <section class="wdc-page page-my"
+            v-class="wdc-page-current: $parent.currnetPage == 'page-self'">
+            <header>
+              <i class="w-icon w-icon-back"
+                v-on="click: backToSell()">Back</i>
+              <h1>我购买到的商品</h1>
+            </header>
+            <main>
+              <div class="wdc-card wdc-card-self">
+              </div>
+            </main>
+        </section>
+
+        <section class="wdc-page page-about"
+            v-class="wdc-page-current: $parent.currnetPage == 'page-about'">
+            <header>
+              <i class="w-icon w-icon-back"
+                v-on="click: backToSell()">Back</i>
+              <h1> 闪电发货，双倍赔付承诺</h1>
+            </header>
+            <main>
+              <div class="wdc-text-container">
+                  PDF]
+                  Transition communications - Pearson VUE
+                  www.pearsonvue.com/microsoft/ms_pvue_transition_faqs.pdf
+                  Page 1 ... About the transition to Pearson VUE. 1) What exactly is the change that ... The adult needs to sign next to the minor on the log-in sheet to verify the  .
+                  PDF]
+                  Transition communications - Pearson VUE
+                  www.pearsonvue.com/microsoft/ms_pvue_transition_faqs.pdf
+                  Page 1 ... About the transition to Pearson VUE. 1) What exactly is the change that ... The adult needs to sign next to the minor on the log-in sheet to verify the  .
+              </div>
+            </main>
+        </section>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src='//www.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+
+        <!-- build:js scripts/main.js -->
+        <script src="bower_components/zepto/zepto.js"></script>
+        <script src="bower_components/vue/dist/vue.js"></script>
+        <script src="scripts/main.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js scripts/fastclick.js -->
+        <script src="scripts/fastclick.js"></script>
+        <script src="scripts/fastclick.example.js"></script>
+        <!-- endbuild -->
+</body>
+</html>

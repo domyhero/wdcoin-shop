@@ -1,0 +1,118 @@
+@import "compass";
+
+html,
+body {
+  position: relative;
+  font-family: 'Roboto Condensed', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 300;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color:#f4f4f4;
+}
+
+// components
+.w-icon{
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    vertical-align: middle;
+}
+
+.w-icon-back{
+
+}
+.w-btn{
+  display: inline-block;
+  padding: 12px 32px;
+  margin-bottom: 13px;
+  margin-top: 13px;
+  min-height: 26px;
+  text-align: center;
+  font-weight: 600;
+  text-decoration: none;
+  outline: 0;
+  transition: none;
+}
+
+.w-btn-primary{
+  background: #4285f4;
+  color: #fff;
+  border: 1px solid #1266f1;
+}
+
+.wdc-page{
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    overflow: hidden;
+    @include backface-visibility(hidden);
+    @include translate3d(0, 0, 0);
+    @include transform-style(preserve-3d);
+}
+.wdc-page-current{
+    visibility: visible;
+    z-index: 1;
+}
+
+header{
+    background: #FFF;
+    position: relative;
+    .banner-container{
+        h1{
+          margin: 0;
+          position: absoulte;
+          bottom: 0;
+          right: 5px;
+        }
+        height: 300px;
+    }
+}
+
+.main {
+    margin-top: 30px;
+    margin-bottom: 100px;
+    .wdc-card {
+        margin: 22px 20px;
+        padding: 25px 30px;
+        background: #fff;
+    }
+}
+.wdc-card {
+    .wdc-card-left{
+        float: left;
+        width: 160px;
+        img {
+            width: 160px;
+            height: 160px;
+        }
+    }
+    .wdc-card-main{
+        position: relative;
+        margin-left: 200px;
+        .w-btn {
+          position: absolute;
+          top: -20px;
+          right: 0;
+        }
+    }
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    height: 65px;
+    width: 100%;
+    line-height: 65px;
+    font-size: 25px;
+    text-align: center;
+    background: #CCC;
+
+    span {
+        float: left;
+        display: inline-block;
+        width: 50%;
+    }
+}
