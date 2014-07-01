@@ -6,9 +6,9 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <title>豌豆币道具商城</title>
+        <meta name="description" content="豌豆币道具商城">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <link rel="stylesheet" href="styles/main.css">
         <!-- build:js scripts/vendor/modernizr.js -->
@@ -20,8 +20,8 @@
             <!-- v-class="wdc-page-current: $parent.currnetPage == 'page-sell'"> -->
             <header>
               <div class="banner-container">
-                <h1>刀塔传奇超值道具<br>豌豆荚火热开卖！</h1>
-                <img src="" alt="">
+                <h1><span>刀塔传奇超值道具<br>豌豆荚火热开卖！</span></h1>
+                <img src="http://cdn.pingwest.com/wp-content/uploads/2014/06/Screen-Shot-2014-06-29-at-7.56.48-PM.png-300x0" alt="刀塔传奇超值道具">
               </div>
             </header>
             <div class="main">
@@ -37,13 +37,13 @@
                   <ul>
                     <li>
                       <dfn>现价</dfn>
-                      <span>240 豌豆荚币</span>
+                      <em>240 豌豆荚币</em>
                       <del>300</del>
                        <i class="icon icon-marker">八折</i>
                     </li>
                     <li>
                       <dfn>仅剩</dfn>
-                      <span>13</span>件
+                      <em>13</em>件
                     </li>
                   </ul>
                   <button class="w-btn w-btn-primary"
@@ -65,22 +65,45 @@
         <section class="wdc-page page-my"
             v-class="wdc-page-current: $parent.currnetPage == 'page-self'">
             <header>
-              <i class="w-icon w-icon-back"
-                v-on="click: backToSell()">Back</i>
-              <h1>我购买到的商品</h1>
+              <h1>
+                <i class="w-icon-back" v-on="click: backToSell()">&#10094;</i>我购买到的商品
+              </h1>
             </header>
-            <main>
-              <div class="wdc-card wdc-card-self">
+
+            <div class="main">
+              <div v-repeat="item : list" class="wdc-card wdc-card-self">
+                <div class="wdc-card-left">
+                  <img src="" alt="">
+                </div>
+                <div class="wdc-card-main">
+                  <!-- use item.title etc here -->
+                  <h2>超级英雄元宝礼包</h2>
+                  <p>砖石100没笔，砖石100没笔，砖石100没笔，砖石100没笔，砖石100没笔，礼包内容</p>
+                  <p>礼包描述，广告语</p>
+                </div>
+                <div class="wdc-card-footer">
+                  <ul>
+                    <li>
+                      <dfn>激活码</dfn>
+                      <em>240 豌豆荚币</em>
+                    </li>
+                    <li>
+                      <dfn>使用期限</dfn>
+                      <em>2014年07月01日 - 2014年07月01日</em>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </main>
+            </div>
         </section>
 
         <section class="wdc-page page-about"
             v-class="wdc-page-current: $parent.currnetPage == 'page-about'">
             <header>
-              <i class="w-icon w-icon-back"
-                v-on="click: backToSell()">Back</i>
-              <h1> 闪电发货，双倍赔付承诺</h1>
+              <h1>
+                  <i class="w-icon w-icon-back" v-on="click: backToSell()">&#8592;</i>
+                闪电发货，双倍赔付承诺
+              </h1>
             </header>
             <main>
               <div class="wdc-text-container">
