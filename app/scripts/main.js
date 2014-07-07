@@ -1,17 +1,29 @@
+window.APIHost = 'http://ag-test.wandoujia.com/prop/';
+
+/*
+TODO:
+1 API 抽象（jsonp 更加方便，处理 errorCode 之类的）
+2 代码重新组织
+3 alert 美化（动画）
+4 viewChange 的动画（loading indicator, 等）
+*/
+
+
 var pageSell = new Vue({
     el: '.page-sell',
-    data: {
-        list: [{
-            title: '超级英雄元宝礼包'
-        }, {
-            title: '超级英雄元宝礼包'
-        }, {
-            title: '超级英雄元宝礼包'
-        }]
-    },
     created: function() {
         this.$dispatch('child-created', this);
-        // this.$data.currentPage = this.$parent.$data.currentPage;
+        $.ajax({
+            jsonp: 'callBack',
+            url: APIHost + 'propgoods',
+            contentType: 'application/json',
+            dataType: 'jsonp',
+            success: function(data) {
+                pageSell.$data = JSON.parse(data.basicJson);
+                console.log(data);
+                // bind to scope
+            }
+        });
     },
     methods: {
         onClick: function(e) {
@@ -27,6 +39,23 @@ var pageSell = new Vue({
         },
         triggerBuy: function(item) {
             console.log(item);
+            // 购买单品
+            $.ajax({
+                jsonp: 'callBack',
+                url: APIHost + 'subtractinventory',
+                contentType: 'application/json',
+                dataType: 'jsonp',
+                data: {
+                    goodsId: item.id
+                },
+                headers: {
+                    cookie: 'wdj_auth=_V3YnJ1Y2UuYmFpQHdhbmRvdWppYS5jb206MTQzMzM1NjEyNTAxMzpmNDhlNjQ0YzJhNzUzYTM1OTM0ZDIzZWQ4MWM2OWU4Nw'
+                },
+                success: function(data) {
+                    console.log(data);
+                    // bind to scope
+                }
+            });
             pmtAlert('买完啦');
             // or invoke intent for buy item
         }
@@ -46,6 +75,21 @@ var pageMy = new Vue({
     },
     methods: {
         backToSell: backToSell
+    },
+    created: function() {
+        // 获取自己的列表，存入 scope
+        $.ajax({
+            jsonp: 'callBack',
+            url: APIHost + 'boughtgoods',
+            contentType: 'application/json',
+            dataType: 'jsonp',
+            headers: {
+                cookie: 'wdj_auth=_V3YnJ1Y2UuYmFpQHdhbmRvdWppYS5jb206MTQzMzM1NjEyNTAxMzpmNDhlNjQ0YzJhNzUzYTM1OTM0ZDIzZWQ4MWM2OWU4Nw'
+            },
+            success: function(data) {
+                console.log(data);
+            }
+        });
     }
 });
 
@@ -53,6 +97,25 @@ var pageAbout = new Vue({
     el: '.page-about',
     methods: {
         backToSell: backToSell
+    },
+    created: function() {
+        // about 页面接口
+        $.ajax({
+            jsonp: 'callBack',
+            url: APIHost + 'instruction',
+            contentType: 'application/json',
+            dataType: 'jsonp',
+            success: function(data) {
+                console.log(data);
+            }
+        });
+    }
+});
+
+var App = new Vue({
+    el: 'body',
+    data: {
+        currentPage: 'page-sell'
     }
 });
 
@@ -65,20 +128,6 @@ function switchToPage(page) {
     $('.wdc-page-current').removeClass('wdc-page-current');
     $('.' + page).addClass('wdc-page-current');
 }
-
-var App = new Vue({
-    el: 'body',
-    data: {
-        currentPage: 'page-sell'
-    },
-    created: function() {
-        // this.$on('changePage', function(child) {
-        //     console.log('new child created: ')
-        //     console.log(child)
-        // });
-    }
-});
-
 
 function pmtAlert(msg) {
     var tpl =
@@ -155,7 +204,7 @@ function pmtAlert(msg) {
             var uid = resp.member ? resp.member.uid : '';
         }
     });
-})
+})();
 
 
 // use $dispatch and $on

@@ -31,19 +31,19 @@
                 </div>
                 <div class="wdc-card-main">
                   <!-- use item.title etc here -->
-                  <h2>超级英雄元宝礼包</h2>
-                  <p>砖石100没笔，砖石100没笔，砖石100没笔，砖石100没笔，砖石100没笔，礼包内容</p>
-                  <p>礼包描述，广告语</p>
+                  <h2>{{item.name}}</h2>
+                  <p>{{item.description}}</p>
+                  <p>{{item.comments}}</p>
                   <ul>
                     <li>
                       <dfn>现价</dfn>
-                      <em>240 豌豆荚币</em>
-                      <del>300</del>
-                       <i class="icon icon-marker">八折</i>
+                      <em>{{item.curPriceStr}} 豌豆荚币</em>
+                      <del>{{item.oriPriceStr}}</del>
+                       <i class="icon icon-marker">{{item.discountStr}}折</i>
                     </li>
                     <li>
                       <dfn>仅剩</dfn>
-                      <em>13</em>件
+                      <em>{{item.maxCount - item.boughtCount}}</em>件
                     </li>
                   </ul>
                   <button class="w-btn w-btn-primary"
@@ -131,11 +131,6 @@
         <script src="bower_components/zepto/zepto.js"></script>
         <script src="bower_components/vue/dist/vue.js"></script>
         <script src="scripts/main.js"></script>
-        <!-- endbuild -->
-
-        <!-- build:js scripts/fastclick.js -->
-        <script src="scripts/fastclick.js"></script>
-        <script src="scripts/fastclick.example.js"></script>
         <!-- endbuild -->
 </body>
 </html>
