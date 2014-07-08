@@ -31,7 +31,8 @@ em {
     position: absolute;
     top: 0;
     left: 0;
-    visibility: hidden;
+    // visibility: hidden;
+    display: none;
     overflow: hidden;
     @include backface-visibility(hidden);
     @include translate3d(0, 0, 0);
@@ -39,7 +40,7 @@ em {
 }
 
 .wdc-page-current{
-    visibility: visible;
+    display: block;
     z-index: 1;
 }
 
@@ -188,12 +189,12 @@ header{
 footer {
     position: fixed;
     bottom: 0;
-    height: 65px;
+    height: 45px;
     width: 100%;
-    line-height: 65px;
-    font-size: 25px;
+    line-height: 45px;
+    font-size: 18px;
     text-align: center;
-    background: #CCC;
+    background: #ccc;
 
     span {
         float: left;

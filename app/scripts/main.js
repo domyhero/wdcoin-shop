@@ -64,15 +64,6 @@ var pageSell = new Vue({
 
 var pageMy = new Vue({
     el: '.page-my',
-    data: {
-        list: [{
-            title: '超级英雄元宝礼包'
-        }, {
-            title: '超级英雄元宝礼包'
-        }, {
-            title: '超级英雄元宝礼包'
-        }]
-    },
     methods: {
         backToSell: backToSell
     },
@@ -88,6 +79,7 @@ var pageMy = new Vue({
             },
             success: function(data) {
                 console.log(data);
+                pageMy.$data = JSON.parse(data.basicJson);
             }
         });
     }
@@ -107,6 +99,7 @@ var pageAbout = new Vue({
             dataType: 'jsonp',
             success: function(data) {
                 console.log(data);
+                pageAbout.$data.desc = data.basicJson;
             }
         });
     }

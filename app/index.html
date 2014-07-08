@@ -27,7 +27,7 @@
             <div class="main">
               <div v-repeat="item : list" class="wdc-card wdc-card-sell">
                 <div class="wdc-card-left">
-                  <img src="" alt="">
+                  <img v-attr="src: item.iconUrl, alt: item.name">
                 </div>
                 <div class="wdc-card-main">
                   <!-- use item.title etc here -->
@@ -43,7 +43,7 @@
                     </li>
                     <li>
                       <dfn>仅剩</dfn>
-                      <em>{{item.maxCount - item.boughtCount}}</em>件
+                      <em>{{item.inventoryCount}}</em>件
                     </li>
                   </ul>
                   <button class="w-btn w-btn-primary"
@@ -73,23 +73,23 @@
             <div class="main">
               <div v-repeat="item : list" class="wdc-card wdc-card-self">
                 <div class="wdc-card-left">
-                  <img src="" alt="">
+                  <img v-attr="src: item.iconUrl, alt: item.name">
                 </div>
                 <div class="wdc-card-main">
                   <!-- use item.title etc here -->
-                  <h2>超级英雄元宝礼包</h2>
-                  <p>砖石100没笔，砖石100没笔，砖石100没笔，砖石100没笔，砖石100没笔，礼包内容</p>
-                  <p>礼包描述，广告语</p>
+                  <h2>{{item.name}}</h2>
+                  <p>{{item.description}}</p>
+                  <p>{{item.comments}}</p>
                 </div>
                 <div class="wdc-card-footer">
                   <ul>
                     <li>
                       <dfn>激活码</dfn>
-                      <em>240 豌豆荚币</em>
+                      <em>{{item.activationCode}}</em>
                     </li>
                     <li>
                       <dfn>使用期限</dfn>
-                      <em>2014年07月01日 - 2014年07月01日</em>
+                      <em>{{item.startDateStr}} - {{item.endDateStr}}</em>
                     </li>
                   </ul>
                 </div>
@@ -107,14 +107,7 @@
             </header>
             <main>
               <div class="wdc-text-container">
-                  PDF]
-                  Transition communications - Pearson VUE
-                  www.pearsonvue.com/microsoft/ms_pvue_transition_faqs.pdf
-                  Page 1 ... About the transition to Pearson VUE. 1) What exactly is the change that ... The adult needs to sign next to the minor on the log-in sheet to verify the  .
-                  PDF]
-                  Transition communications - Pearson VUE
-                  www.pearsonvue.com/microsoft/ms_pvue_transition_faqs.pdf
-                  Page 1 ... About the transition to Pearson VUE. 1) What exactly is the change that ... The adult needs to sign next to the minor on the log-in sheet to verify the  .
+                  {{desc}}
               </div>
             </main>
         </section>
