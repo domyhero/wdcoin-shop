@@ -1,8 +1,10 @@
 // Generated on 2014-06-27 using generator-mobile 1.0.0-alpha.1
 'use strict';
 var LIVERELOAD_PORT = 35729;
-var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
-var mountFolder = function (connect, dir) {
+var lrSnippet = require('connect-livereload')({
+    port: LIVERELOAD_PORT
+});
+var mountFolder = function(connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
 
@@ -12,7 +14,7 @@ var mountFolder = function (connect, dir) {
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     // show elapsed time at the end
     require('time-grunt')(grunt);
     // load all grunt tasks
@@ -56,30 +58,27 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     path: '/screenshots/',
-                    remote : {
-                        files: [
-                            { src: 'http://localhost:<%= connect.options.port %>', dest: 'app.jpg'}
-                        ]
+                    remote: {
+                        files: [{
+                            src: 'http://localhost:<%= connect.options.port %>',
+                            dest: 'app.jpg'
+                        }]
                     },
-                    viewport: ['320x480','480x320','384x640','640x384','602x963','963x602','600x960','960x600','800x1280','1280x800','768x1024','1024x768']
+                    viewport: ['320x480', '480x320', '384x640', '640x384', '602x963', '963x602', '600x960', '960x600', '800x1280', '1280x800', '768x1024', '1024x768']
                 }
             }
         },
-        
+
         responsive_images: {
             dev: {
                 options: {
-                    sizes: [
-                        {
-                            width: 320,
-                        },
-                        {
-                            width: 640
-                        },
-                        {
-                            width: 1024
-                        }
-                    ]
+                    sizes: [{
+                        width: 320,
+                    }, {
+                        width: 640
+                    }, {
+                        width: 1024
+                    }]
                 },
                 files: [{
                     expand: true,
@@ -93,11 +92,11 @@ module.exports = function (grunt) {
             options: {
                 port: 9000,
                 // change this to '0.0.0.0' to access the server from outside
-                hostname: 'localhost'
+                hostname: '0.0.0.0'
             },
             livereload: {
                 options: {
-                    middleware: function (connect) {
+                    middleware: function(connect) {
                         return [
                             lrSnippet,
                             mountFolder(connect, '.tmp'),
@@ -108,7 +107,7 @@ module.exports = function (grunt) {
             },
             test: {
                 options: {
-                    middleware: function (connect) {
+                    middleware: function(connect) {
                         return [
                             mountFolder(connect, '.tmp'),
                             mountFolder(connect, 'test')
@@ -118,7 +117,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 options: {
-                    middleware: function (connect) {
+                    middleware: function(connect) {
                         return [
                             mountFolder(connect, yeomanConfig.dist)
                         ];
@@ -132,13 +131,13 @@ module.exports = function (grunt) {
             }
 
             ,
-            nexus4:{
+            nexus4: {
                 path: 'http://www.browserstack.com/start#os=android&os_version=4.2&device=LG+Nexus+4&speed=1&start=true&url=http://rnikitin.github.io/examples/jumbotron/'
             },
-            nexus7:{
+            nexus7: {
                 path: 'http://www.browserstack.com/start#os=android&os_version=4.1&device=Google+Nexus+7&speed=1&start=true&url=http://rnikitin.github.io/examples/jumbotron/'
             },
-            iphone5:{
+            iphone5: {
                 path: 'http://www.browserstack.com/start#os=ios&os_version=6.0&device=iPhone+5&speed=1&start=true&url=http://rnikitin.github.io/examples/jumbotron/'
             }
 
@@ -159,7 +158,7 @@ module.exports = function (grunt) {
         browser_sync: {
             dev: {
                 bsFiles: {
-                    src : '<%= yeoman.app %>/styles/style.css'
+                    src: '<%= yeoman.app %>/styles/style.css'
                 },
                 options: {
                     watchTask: false,
@@ -262,45 +261,45 @@ module.exports = function (grunt) {
             }
         },
 
-        
+
         modernizr: {
 
             // Path to the build you're using for development.
-            "devFile" : "<%= yeoman.app %>/bower_components/modernizr/modernizr.js",
+            "devFile": "<%= yeoman.app %>/bower_components/modernizr/modernizr.js",
 
             // Path to save out the built file.
-            "outputFile" : "<%= yeoman.dist %>/scripts/modernizr.js",
+            "outputFile": "<%= yeoman.dist %>/scripts/modernizr.js",
 
             // Based on default settings on http://modernizr.com/download/
-            "extra" : {
-                "shiv" : true,
-                "printshiv" : false,
-                "load" : true,
-                "mq" : false,
-                "cssclasses" : true
+            "extra": {
+                "shiv": true,
+                "printshiv": false,
+                "load": true,
+                "mq": false,
+                "cssclasses": true
             },
 
             // Based on default settings on http://modernizr.com/download/
-            "extensibility" : {
-                "addtest" : false,
-                "prefixed" : false,
-                "teststyles" : false,
-                "testprops" : false,
-                "testallprops" : false,
-                "hasevents" : false,
-                "prefixes" : false,
-                "domprefixes" : false
+            "extensibility": {
+                "addtest": false,
+                "prefixed": false,
+                "teststyles": false,
+                "testprops": false,
+                "testallprops": false,
+                "hasevents": false,
+                "prefixes": false,
+                "domprefixes": false
             },
 
             // By default, source is uglified before saving
-            "uglify" : true,
+            "uglify": true,
 
             // Define any tests you want to impliticly include.
-            "tests" : [],
+            "tests": [],
 
             // By default, this task will crawl your project for references to Modernizr tests.
             // Set to false to disable.
-            "parseFiles" : true,
+            "parseFiles": true,
 
             // When parseFiles = true, this task will crawl all *.js, *.css, *.scss files, except files that are in node_modules/.
             // You can override this by defining a "files" array below.
@@ -308,10 +307,10 @@ module.exports = function (grunt) {
 
             // When parseFiles = true, matchCommunityTests = true will attempt to
             // match user-contributed tests.
-            "matchCommunityTests" : false,
+            "matchCommunityTests": false,
 
             // Have custom Modernizr tests? Add paths to their location here.
-            "customTests" : []
+            "customTests": []
         },
 
         useminPrepare: {
@@ -421,12 +420,12 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('server', function (target) {
+    grunt.registerTask('server', function(target) {
         grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
         grunt.task.run(['serve:' + target]);
     });
 
-    grunt.registerTask('serve', function (target) {
+    grunt.registerTask('serve', function(target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
         }
@@ -465,12 +464,12 @@ module.exports = function (grunt) {
         'test',
         'build'
     ]);
-    
+
     grunt.registerTask('screenshots', [
         'clean:server',
         'concurrent:server',
         'connect:livereload',
         'autoshot'
     ]);
-    
+
 };

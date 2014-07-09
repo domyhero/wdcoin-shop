@@ -8,12 +8,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>豌豆币道具商城</title>
         <meta name="description" content="豌豆币道具商城">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta name="viewport" content="width=device-width, user-scalable=no">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <link rel="stylesheet" href="styles/main.css">
-        <!-- build:js scripts/vendor/modernizr.js -->
-        <script src="bower_components/modernizr/modernizr.js"></script>
-        <!-- endbuild -->
     </head>
     <body>
         <section class="wdc-page page-sell wdc-page-current">
@@ -64,11 +61,11 @@
 
         <section class="wdc-page page-my"
             v-class="wdc-page-current: $parent.currnetPage == 'page-self'">
-            <header>
+            <!-- <header>
               <h1>
                 <i class="w-icon-back" v-on="click: backToSell()">&#10094;</i>我购买到的商品
               </h1>
-            </header>
+            </header> -->
 
             <div class="main">
               <div v-repeat="item : list" class="wdc-card wdc-card-self">
@@ -99,12 +96,12 @@
 
         <section class="wdc-page page-about"
             v-class="wdc-page-current: $parent.currnetPage == 'page-about'">
-            <header>
+            <!-- <header>
               <h1>
                   <i class="w-icon w-icon-back" v-on="click: backToSell()">&#8592;</i>
                 闪电发货，双倍赔付承诺
               </h1>
-            </header>
+            </header> -->
             <main>
               <div class="wdc-text-container">
                   {{desc}}
@@ -113,12 +110,14 @@
         </section>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <!--
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
             g.src='//www.google-analytics.com/ga.js';
             s.parentNode.insertBefore(g,s)}(document,'script'));
         </script>
+         -->
 
         <!-- build:js scripts/main.js -->
         <script src="bower_components/zepto/zepto.js"></script>

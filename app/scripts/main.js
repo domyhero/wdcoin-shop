@@ -8,7 +8,6 @@ TODO:
 4 viewChange 的动画（loading indicator, 等）
 */
 
-
 var pageSell = new Vue({
     el: '.page-sell',
     created: function() {
@@ -21,7 +20,6 @@ var pageSell = new Vue({
             success: function(data) {
                 pageSell.$data = JSON.parse(data.basicJson);
                 console.log(data);
-                // bind to scope
             }
         });
     },
@@ -31,9 +29,23 @@ var pageSell = new Vue({
             console.log(e.targetVM === this) // true
         },
         switchTo: function(page) {
-            if (page === 'page-my' && !window.wdc_isLogin) {
-                pmtAlert('请先登录');
-                // return;
+            if (page === 'page-my') {
+                if (!window.wdc_isLogin) {
+                    pmtAlert('请先登录');
+                    return;
+                } else {
+                    // 获取自己的列表，存入 scope
+                    $.ajax({
+                        jsonp: 'callBack',
+                        url: APIHost + 'boughtgoods',
+                        contentType: 'application/json',
+                        dataType: 'jsonp',
+                        success: function(data) {
+                            console.log(data);
+                            pageMy.$data = JSON.parse(data.basicJson);
+                        }
+                    });
+                }
             }
             switchToPage(page);
         },
@@ -48,15 +60,25 @@ var pageSell = new Vue({
                 data: {
                     goodsId: item.id
                 },
-                headers: {
-                    cookie: 'wdj_auth=_V3YnJ1Y2UuYmFpQHdhbmRvdWppYS5jb206MTQzMzM1NjEyNTAxMzpmNDhlNjQ0YzJhNzUzYTM1OTM0ZDIzZWQ4MWM2OWU4Nw'
-                },
                 success: function(data) {
                     console.log(data);
+                    if (data.basicJson) {
+                        invokeNativePay($.extend({
+                            action: 'pay',
+                            // appId: '100008453',
+                            appId: '100000225',
+                            subject: 'test'
+                        }, {
+                            out_trade_no: data.basicJson,
+                            money: item.curPriceStr * 100,
+                            desc: item.name
+                        }));
+                    } else {
+                        pmtAlert('买完啦');
+                    }
                     // bind to scope
                 }
             });
-            pmtAlert('买完啦');
             // or invoke intent for buy item
         }
     }
@@ -66,22 +88,6 @@ var pageMy = new Vue({
     el: '.page-my',
     methods: {
         backToSell: backToSell
-    },
-    created: function() {
-        // 获取自己的列表，存入 scope
-        $.ajax({
-            jsonp: 'callBack',
-            url: APIHost + 'boughtgoods',
-            contentType: 'application/json',
-            dataType: 'jsonp',
-            headers: {
-                cookie: 'wdj_auth=_V3YnJ1Y2UuYmFpQHdhbmRvdWppYS5jb206MTQzMzM1NjEyNTAxMzpmNDhlNjQ0YzJhNzUzYTM1OTM0ZDIzZWQ4MWM2OWU4Nw'
-            },
-            success: function(data) {
-                console.log(data);
-                pageMy.$data = JSON.parse(data.basicJson);
-            }
-        });
     }
 });
 
@@ -112,14 +118,38 @@ var App = new Vue({
     }
 });
 
+$(window).on('scroll', function() {
+    $('footer').css('top', window.innerHeight - $('footer').height() + window.scrollY);
+});
+$('footer').css('top', window.innerHeight - $('footer').height() + window.scrollY);
+
 function backToSell() {
     switchToPage('page-sell');
 }
+
+var pageTitleDict = {
+    'page-about': '闪电发货，双倍赔付承诺',
+    'page-sell': '豌豆荚道具商城',
+    'page-my': '我购买到的商品'
+};
 
 function switchToPage(page) {
     $('body').scrollTop(0);
     $('.wdc-page-current').removeClass('wdc-page-current');
     $('.' + page).addClass('wdc-page-current');
+    // document.title update
+    document.title = pageTitleDict[page];
+    location.hash = page;
+}
+
+$(window).on('hashchange', function(e) {
+    var page = location.hash || '#page-sell';
+    switchToPage(page.replace('#', ''));
+});
+
+function invokeNativePay(param) {
+    param = escape(JSON.stringify(param));
+    window.campaignPlugin.startActivity('intent:#Intent;launchFlags=0x10000000;component=com.wandoujia.phoenix2/com.wandoujia.p4.payment.plugin.adapter.PaySdkPluginTransferActivity;S.paysdk_commands=' + param + ';end');
 }
 
 function pmtAlert(msg) {
@@ -180,23 +210,26 @@ function pmtAlert(msg) {
         }
     }
 
-
     // get wdj_auth from bannner to set it
     var _auth = window.cookieManager.getCookie('wdj_auth');
     window.wdc_isLogin = false;
     if (_auth) {
         window.wdc_isLogin = true;
+        window.cookieManager.setCookie('wdj_auth', _auth, 2020, 1, 1, '/', 'wandoujia.com');
+    } else {
+        // debug
+        window.wdc_isLogin = true;
+        window.cookieManager.setCookie('wdj_auth', '_V3YnJ1Y2UuYmFpQHdhbmRvdWppYS5jb206MTQzMzM1NjEyNTAxMzpmNDhlNjQ0YzJhNzUzYTM1OTM0ZDIzZWQ4MWM2OWU4Nw', 2020, 1, 1, '/', 'wandoujia.com');
     }
-    window.cookieManager.setCookie('wdj_auth', _auth, 2020, 1, 1, '/', 'wandoujia.com');
 
     // get uid by account http
-    $.ajax({
-        dataType: 'jsonp',
-        url: 'https://account.wandoujia.com/v4/api/profile',
-        success: function(resp) {
-            var uid = resp.member ? resp.member.uid : '';
-        }
-    });
+    // $.ajax({
+    //     dataType: 'jsonp',
+    //     url: 'https://account.wandoujia.com/v4/api/profile',
+    //     success: function(resp) {
+    //         var uid = resp.member ? resp.member.uid : '';
+    //     }
+    // });
 })();
 
 

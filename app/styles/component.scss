@@ -1,3 +1,7 @@
+$green: #93b829;
+$yellow: #F90;
+
+@import "compass";
 
 // components
 .w-icon{
@@ -32,6 +36,11 @@
   font-size: 18px;
   padding: 10px 18px;
   font-weight: 500;
+
+  @media (max-width: 360px) {
+      padding: 8px 12px;
+      font-size: 16px;
+  }
 }
 
 
@@ -68,6 +77,7 @@
         .w-btn {
             float: right;
             margin: 0 5px;
+            padding: 8px;
         }
     }
 }
