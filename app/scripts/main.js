@@ -19,17 +19,15 @@ var pageSell = new Vue({
             dataType: 'jsonp',
             success: function(data) {
                 pageSell.$data = JSON.parse(data.basicJson);
-                console.log(data);
                 readyToShow(pageSell);
             }
         });
     },
     methods: {
         triggerBuy: function(item) {
-            console.log(item);
             // 购买单品
             if (!window.wdc_isLogin) {
-                pmtAlert('请您先到客户端登录豌豆荚帐号');
+                pmtAlert('请您先到客户端登录豌豆荚帐号', true);
                 return;
             }
             $.ajax({
@@ -41,7 +39,14 @@ var pageSell = new Vue({
                     goodsId: item.id
                 },
                 success: function(data) {
-                    console.log(data);
+                    if (data.errorCode !== 'SUCCESS') {
+                        if (data.errorMsg) {
+                            pmtAlert(data.errorMsg);
+                        } else {
+                            pmtAlert('系统异常，请稍后再试');
+                        }
+                        return;
+                    }
                     if (data.basicJson) {
                         invokeNativePay($.extend({
                             action: 'pay',
@@ -84,7 +89,6 @@ var pageAbout = new Vue({
             contentType: 'application/json',
             dataType: 'jsonp',
             success: function(data) {
-                console.log(data);
                 pageAbout.$data.desc = data.basicJson;
             }
         });
@@ -100,7 +104,7 @@ var App = new Vue({
         switchTo: function(page) {
             if (page === 'page-my') {
                 if (!window.wdc_isLogin) {
-                    pmtAlert('请您先到客户端登录豌豆荚帐号');
+                    pmtAlert('请您先到客户端登录豌豆荚帐号', true);
                     return;
                 } else {
                     // 获取自己的列表，存入 scope
@@ -110,7 +114,14 @@ var App = new Vue({
                         contentType: 'application/json',
                         dataType: 'jsonp',
                         success: function(data) {
-                            console.log(data);
+                            if (data.errorCode !== 'SUCCESS') {
+                                if (data.errorMsg) {
+                                    pmtAlert(data.errorMsg);
+                                } else {
+                                    pmtAlert('系统异常，请稍后再试');
+                                }
+                                return;
+                            }
                             pageMy.$data = JSON.parse(data.basicJson);
                         }
                     });
@@ -154,23 +165,35 @@ function invokeNativePay(param) {
     window.campaignPlugin.startActivity('intent:#Intent;launchFlags=0x10000000;component=com.wandoujia.phoenix2/com.wandoujia.p4.payment.plugin.adapter.PaySdkPluginTransferActivity;S.paysdk_commands=' + param + ';end');
 }
 
-function pmtAlert(msg) {
+function invokeNativeLogin() {
+    window.campaignPlugin.startActivity('intent:#Intent;launchFlags=0x10000000;component=com.wandoujia.phoenix2/com.wandoujia.p4.account.activity.PhoenixAccountActivity;end');
+}
+
+function pmtAlert(msg, isLogin) {
     var tpl =
         ['<div class="pmt-popup pmt-popup-alert">',
         '<div class="popup-container">',
         '<div class="popup-content">',
         '<p>{{msg}}</p>',
         '<div class="popup-ctrl">',
-        '<button class="w-btn w-btn-grand">我知道了</button>',
+        '<button class="w-btn cancel">我知道了</button>',
         '</div></div></div></div>'
     ].join('');
 
     tpl = tpl.replace('{{msg}}', msg);
 
     var $alert = $(tpl);
-    $alert.find('.popup-ctrl button').click(function() {
+    if (isLogin) {
+        $alert.find('.popup-ctrl').prepend('<button class="w-btn w-btn-primary login">去登录</button>');
+    }
+
+    $alert.find('.popup-ctrl .cancel').click(function() {
         // remove it
         $alert.remove();
+    });
+    $alert.find('.popup-ctrl .login').click(function() {
+        // remove it
+        invokeNativeLogin();
     });
 
     // append to body
@@ -248,7 +271,3 @@ initNativePay();
     //     }
     // });
 })();
-
-
-// use $dispatch and $on
-// use $parent hook
