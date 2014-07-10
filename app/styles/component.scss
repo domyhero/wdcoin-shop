@@ -1,4 +1,4 @@
-$green: #93b829;
+$green: #00b93a;
 $yellow: #F90;
 
 @import "compass";
@@ -65,7 +65,7 @@ $yellow: #F90;
 
     .popup-container {
         width: 70%;
-        padding: 10px;
+        margin: 30px 25px 20px 25px;
         max-width: 400px;
         font-size: 14px;
 
@@ -75,9 +75,14 @@ $yellow: #F90;
     .popup-ctrl {
         @include pie-clearfix;
         .w-btn {
-            float: right;
-            margin: 0 5px;
-            padding: 8px;
+          float: right;
+          margin: 0 5px;
+          padding: 8px 12px;
+          background: $green;
+          color: #fff;
+          border: none;
+          font-size: 14px;
+          font-weight: normal;
         }
     }
 }

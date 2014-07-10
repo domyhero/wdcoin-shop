@@ -10,7 +10,9 @@
         <meta name="description" content="豌豆币道具商城">
         <meta name="viewport" content="width=device-width, user-scalable=no">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css style.css -->
         <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
     </head>
     <body>
       <footer>
@@ -59,8 +61,7 @@
             </div>
         </section>
 
-        <section class="wdc-page page-my" v-cloak
-            v-class="wdc-page-current: $parent.currnetPage == 'page-self'">
+        <section class="wdc-page page-my" v-cloak>
             <!-- <header>
               <h1>
                 <i class="w-icon-back" v-on="click: backToSell()">&#10094;</i>我购买到的商品
@@ -68,34 +69,38 @@
             </header> -->
 
             <div class="main">
-              <div v-repeat="item : list" class="wdc-card wdc-card-self">
-                <div class="wdc-card-left">
-                  <img v-attr="src: item.iconUrl, alt: item.name">
+              <div v-show="list.length">
+                <div v-repeat="item : list" class="wdc-card wdc-card-self">
+                  <div class="wdc-card-left">
+                    <img v-attr="src: item.iconUrl, alt: item.name">
+                  </div>
+                  <div class="wdc-card-main">
+                    <!-- use item.title etc here -->
+                    <h2>{{item.name}}</h2>
+                    <p>{{item.description}}</p>
+                    <p>{{item.comments}}</p>
+                  </div>
+                  <div class="wdc-card-footer">
+                    <ul>
+                      <li>
+                        <dfn>激活码</dfn>
+                        <em>{{item.activationCode}}</em>
+                      </li>
+                      <li>
+                        <dfn>使用期限</dfn>
+                        <em>{{item.startDateStr}} - {{item.endDateStr}}</em>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <div class="wdc-card-main">
-                  <!-- use item.title etc here -->
-                  <h2>{{item.name}}</h2>
-                  <p>{{item.description}}</p>
-                  <p>{{item.comments}}</p>
-                </div>
-                <div class="wdc-card-footer">
-                  <ul>
-                    <li>
-                      <dfn>激活码</dfn>
-                      <em>{{item.activationCode}}</em>
-                    </li>
-                    <li>
-                      <dfn>使用期限</dfn>
-                      <em>{{item.startDateStr}} - {{item.endDateStr}}</em>
-                    </li>
-                  </ul>
-                </div>
+              </div>
+              <div v-show="!lis.length">
+                <p>您还没有购买任何道具。</p>
               </div>
             </div>
         </section>
 
-        <section class="wdc-page page-about" v-cloak
-            v-class="wdc-page-current: $parent.currnetPage == 'page-about'">
+        <section class="wdc-page page-about" v-cloak>
             <!-- <header>
               <h1>
                   <i class="w-icon w-icon-back" v-on="click: backToSell()">&#8592;</i>
@@ -119,7 +124,7 @@
         </script>
          -->
 
-        <!-- build:js main.js -->
+        <!-- build:js script.js -->
         <script src="bower_components/zepto/zepto.js"></script>
         <script src="bower_components/vue/dist/vue.js"></script>
         <script src="scripts/main.js"></script>

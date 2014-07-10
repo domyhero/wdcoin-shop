@@ -1,4 +1,4 @@
-window.APIHost = 'http://ag-test.wandoujia.com/prop/';
+window.APIHost = 'http://innerpay.wandoujia.com/prop/';
 
 /*
 TODO:
@@ -28,6 +28,10 @@ var pageSell = new Vue({
         triggerBuy: function(item) {
             console.log(item);
             // 购买单品
+            if (!window.wdc_isLogin) {
+                pmtAlert('请您先到客户端登录豌豆荚帐号');
+                return;
+            }
             $.ajax({
                 jsonp: 'callBack',
                 url: APIHost + 'subtractinventory',
@@ -50,7 +54,7 @@ var pageSell = new Vue({
                             desc: item.name
                         }));
                     } else {
-                        pmtAlert('买完啦');
+                        pmtAlert('该商品已经被抢光了，再去看看其他商品吧');
                     }
                     // bind to scope
                 }
@@ -82,7 +86,6 @@ var pageAbout = new Vue({
             success: function(data) {
                 console.log(data);
                 pageAbout.$data.desc = data.basicJson;
-                readyToShow(pageAbout);
             }
         });
     }
@@ -97,7 +100,7 @@ var App = new Vue({
         switchTo: function(page) {
             if (page === 'page-my') {
                 if (!window.wdc_isLogin) {
-                    pmtAlert('请先登录');
+                    pmtAlert('请您先到客户端登录豌豆荚帐号');
                     return;
                 } else {
                     // 获取自己的列表，存入 scope
@@ -109,7 +112,6 @@ var App = new Vue({
                         success: function(data) {
                             console.log(data);
                             pageMy.$data = JSON.parse(data.basicJson);
-                            readyToShow(pageMy);
                         }
                     });
                 }
@@ -159,7 +161,7 @@ function pmtAlert(msg) {
         '<div class="popup-content">',
         '<p>{{msg}}</p>',
         '<div class="popup-ctrl">',
-        '<button class="w-btn w-btn-grand">知道了</button>',
+        '<button class="w-btn w-btn-grand">我知道了</button>',
         '</div></div></div></div>'
     ].join('');
 
@@ -192,8 +194,13 @@ if (!window.campaignPlugin) {
     window.campaignPlugin = {
         toast: function(msg) {
             window.alert(msg);
-        },
-        startActivity: function() {}
+        }
+    }
+} else {
+    if (!window.campaignPlugin.startActivity) {
+        window.campaignPlugin.startActivity = function() {
+            pmtAlert('对不起您还不支持...');
+        }
     }
 }
 initNativePay();
@@ -231,11 +238,6 @@ initNativePay();
         window.wdc_isLogin = true;
         window.cookieManager.setCookie('wdj_auth', _auth, 2020, 1, 1, '/', 'wandoujia.com');
     }
-    // else {
-    //        // debug
-    //        window.wdc_isLogin = true;
-    //        window.cookieManager.setCookie('wdj_auth', '_V3YnJ1Y2UuYmFpQHdhbmRvdWppYS5jb206MTQzMzM1NjEyNTAxMzpmNDhlNjQ0YzJhNzUzYTM1OTM0ZDIzZWQ4MWM2OWU4Nw', 2020, 1, 1, '/', 'wandoujia.com');
-    //    }
 
     // get uid by account http
     // $.ajax({
