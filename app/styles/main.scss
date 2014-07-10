@@ -4,6 +4,8 @@ $yellow: #F90;
 @import "compass";
 @import "./component";
 
+[v-cloak], .hide { display: none }
+
 html,
 body {
   position: relative;
@@ -216,7 +218,7 @@ header{
 }
 
 footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     height: 45px;
     width: 100%;

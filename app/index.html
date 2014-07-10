@@ -13,7 +13,16 @@
         <link rel="stylesheet" href="styles/main.css">
     </head>
     <body>
-        <section class="wdc-page page-sell wdc-page-current">
+      <footer>
+        <span v-on="click: switchTo('page-about')">
+          闪电发货，双倍赔付承诺
+        </span>
+        <span v-on="click: switchTo('page-my')">
+          我购买到的商品
+        </span>
+      </footer>
+
+        <section class="wdc-page page-sell" v-cloak>
             <!-- v-class="wdc-page-current: $parent.currnetPage == 'page-sell'"> -->
             <header>
               <div class="banner-container">
@@ -34,7 +43,7 @@
                   <ul>
                     <li>
                       <dfn>现价</dfn>
-                      <em>{{item.curPriceStr}} 豌豆荚币</em>
+                      <em>{{item.curPriceStr}} 豌豆币</em>
                       <del>{{item.oriPriceStr}}</del>
                        <i class="icon icon-marker">{{item.discountStr}}折</i>
                     </li>
@@ -48,18 +57,9 @@
                 </div>
               </div>
             </div>
-
-            <footer>
-              <span v-on="click: switchTo('page-about')">
-                闪电发货，双倍赔付承诺
-              </span>
-              <span v-on="click: switchTo('page-my')">
-                我购买到的商品
-              </span>
-            </footer>
         </section>
 
-        <section class="wdc-page page-my"
+        <section class="wdc-page page-my" v-cloak
             v-class="wdc-page-current: $parent.currnetPage == 'page-self'">
             <!-- <header>
               <h1>
@@ -94,7 +94,7 @@
             </div>
         </section>
 
-        <section class="wdc-page page-about"
+        <section class="wdc-page page-about" v-cloak
             v-class="wdc-page-current: $parent.currnetPage == 'page-about'">
             <!-- <header>
               <h1>
@@ -119,7 +119,7 @@
         </script>
          -->
 
-        <!-- build:js scripts/main.js -->
+        <!-- build:js main.js -->
         <script src="bower_components/zepto/zepto.js"></script>
         <script src="bower_components/vue/dist/vue.js"></script>
         <script src="scripts/main.js"></script>

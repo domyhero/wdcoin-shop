@@ -20,35 +20,11 @@ var pageSell = new Vue({
             success: function(data) {
                 pageSell.$data = JSON.parse(data.basicJson);
                 console.log(data);
+                readyToShow(pageSell);
             }
         });
     },
     methods: {
-        onClick: function(e) {
-            console.log(e.target.tagName) // "A"
-            console.log(e.targetVM === this) // true
-        },
-        switchTo: function(page) {
-            if (page === 'page-my') {
-                if (!window.wdc_isLogin) {
-                    pmtAlert('请先登录');
-                    return;
-                } else {
-                    // 获取自己的列表，存入 scope
-                    $.ajax({
-                        jsonp: 'callBack',
-                        url: APIHost + 'boughtgoods',
-                        contentType: 'application/json',
-                        dataType: 'jsonp',
-                        success: function(data) {
-                            console.log(data);
-                            pageMy.$data = JSON.parse(data.basicJson);
-                        }
-                    });
-                }
-            }
-            switchToPage(page);
-        },
         triggerBuy: function(item) {
             console.log(item);
             // 购买单品
@@ -65,8 +41,8 @@ var pageSell = new Vue({
                     if (data.basicJson) {
                         invokeNativePay($.extend({
                             action: 'pay',
-                            // appId: '100008453',
-                            appId: '100000225',
+                            appId: '100008453',
+                            // appId: '100000225',
                             subject: 'test'
                         }, {
                             out_trade_no: data.basicJson,
@@ -106,6 +82,7 @@ var pageAbout = new Vue({
             success: function(data) {
                 console.log(data);
                 pageAbout.$data.desc = data.basicJson;
+                readyToShow(pageAbout);
             }
         });
     }
@@ -115,13 +92,37 @@ var App = new Vue({
     el: 'body',
     data: {
         currentPage: 'page-sell'
+    },
+    methods: {
+        switchTo: function(page) {
+            if (page === 'page-my') {
+                if (!window.wdc_isLogin) {
+                    pmtAlert('请先登录');
+                    return;
+                } else {
+                    // 获取自己的列表，存入 scope
+                    $.ajax({
+                        jsonp: 'callBack',
+                        url: APIHost + 'boughtgoods',
+                        contentType: 'application/json',
+                        dataType: 'jsonp',
+                        success: function(data) {
+                            console.log(data);
+                            pageMy.$data = JSON.parse(data.basicJson);
+                            readyToShow(pageMy);
+                        }
+                    });
+                }
+            }
+            switchToPage(page);
+        }
     }
 });
 
-$(window).on('scroll', function() {
-    $('footer').css('top', window.innerHeight - $('footer').height() + window.scrollY);
-});
-$('footer').css('top', window.innerHeight - $('footer').height() + window.scrollY);
+function readyToShow(page) {
+    $('.wdc-page-current').removeClass('wdc-page-current');
+    $(page.$el).addClass('wdc-page-current');
+}
 
 function backToSell() {
     switchToPage('page-sell');
@@ -142,13 +143,12 @@ function switchToPage(page) {
     location.hash = page;
 }
 
-$(window).on('hashchange', function(e) {
-    var page = location.hash || '#page-sell';
-    switchToPage(page.replace('#', ''));
-});
+function initNativePay() {
+    window.campaignPlugin.startActivity('intent:#Intent;launchFlags=0x10000000;component=com.wandoujia.phoenix2/com.wandoujia.p4.payment.plugin.adapter.PaySdkPluginTransferActivity;S.paysdk_commands=%7B%22package_name%22%3A%22com.wandoujia.wdpaydemo2.wdj%22%2C%22action%22%3A%22wandoujia_platform_init%22%2C%22appId%22%3A%22100008453%22%2C%22secretKey%22%3A%222a681be5af6b0da4b1b9a4bf70509259%22%2C%22need_login%22%3Atrue%7D;end');
+}
 
 function invokeNativePay(param) {
-    param = escape(JSON.stringify(param));
+    param = encodeURI(JSON.stringify(param));
     window.campaignPlugin.startActivity('intent:#Intent;launchFlags=0x10000000;component=com.wandoujia.phoenix2/com.wandoujia.p4.payment.plugin.adapter.PaySdkPluginTransferActivity;S.paysdk_commands=' + param + ';end');
 }
 
@@ -175,7 +175,30 @@ function pmtAlert(msg) {
     $('body').append($alert);
 }
 
+$(window).on('hashchange', function(e) {
+    var page = location.hash || '#page-sell';
+    switchToPage(page.replace('#', ''));
+});
 
+// $(window).on('scroll', function() {
+//     $('footer').css('top', window.innerHeight - $('footer').height() + window.scrollY);
+// });
+
+// init
+// $('footer').css('top', window.innerHeight - $('footer').height() + window.scrollY);
+
+// polyfill toast
+if (!window.campaignPlugin) {
+    window.campaignPlugin = {
+        toast: function(msg) {
+            window.alert(msg);
+        },
+        startActivity: function() {}
+    }
+}
+initNativePay();
+
+// cookie related
 (function() {
     // get & set wdj_auth,
     window.cookieManager = {
@@ -201,26 +224,18 @@ function pmtAlert(msg) {
         }
     };
 
-    // polyfill toast
-    if (!window.campaignPlugin) {
-        window.campaignPlugin = {
-            toast: function(msg) {
-                window.alert(msg);
-            }
-        }
-    }
-
     // get wdj_auth from bannner to set it
     var _auth = window.cookieManager.getCookie('wdj_auth');
     window.wdc_isLogin = false;
     if (_auth) {
         window.wdc_isLogin = true;
         window.cookieManager.setCookie('wdj_auth', _auth, 2020, 1, 1, '/', 'wandoujia.com');
-    } else {
-        // debug
-        window.wdc_isLogin = true;
-        window.cookieManager.setCookie('wdj_auth', '_V3YnJ1Y2UuYmFpQHdhbmRvdWppYS5jb206MTQzMzM1NjEyNTAxMzpmNDhlNjQ0YzJhNzUzYTM1OTM0ZDIzZWQ4MWM2OWU4Nw', 2020, 1, 1, '/', 'wandoujia.com');
     }
+    // else {
+    //        // debug
+    //        window.wdc_isLogin = true;
+    //        window.cookieManager.setCookie('wdj_auth', '_V3YnJ1Y2UuYmFpQHdhbmRvdWppYS5jb206MTQzMzM1NjEyNTAxMzpmNDhlNjQ0YzJhNzUzYTM1OTM0ZDIzZWQ4MWM2OWU4Nw', 2020, 1, 1, '/', 'wandoujia.com');
+    //    }
 
     // get uid by account http
     // $.ajax({
