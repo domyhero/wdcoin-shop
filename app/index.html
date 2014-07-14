@@ -16,12 +16,14 @@
     </head>
     <body>
       <footer>
-        <span v-on="click: switchTo('page-about')">
-          闪电发货，双倍赔付承诺
-        </span>
-        <span v-on="click: switchTo('page-my')">
-          我购买到的商品
-        </span>
+        <div class="menu">
+          <span v-on="click: switchTo('page-about')">
+            闪电发货，双倍赔付承诺
+          </span>
+          <span v-on="click: switchTo('page-my')">
+            我购买到的商品
+          </span>
+        </div>
       </footer>
 
         <section class="wdc-page page-sell" v-cloak>
@@ -46,8 +48,8 @@
                     <li>
                       <dfn>现价</dfn>
                       <em>{{item.curPriceStr}} 豌豆币</em>
-                      <del>{{item.oriPriceStr}}</del>
-                       <i class="icon icon-marker">{{item.discountStr}}折</i>
+                      <dfn class="font-mini">原价</dfn><del class="font-mini">{{item.oriPriceStr}}</del>
+                       <i class="icon icon-marker">{{item.discountStr}} 折</i>
                     </li>
                     <li>
                       <dfn>仅剩</dfn>
@@ -58,6 +60,7 @@
                     v-on="click: triggerBuy(item)">购买</button>
                 </div>
               </div>
+              <p class="tip">温馨提示：如果点击购买没有反应，请升级到最新版的豌豆荚客户端</p>
             </div>
         </section>
 
@@ -108,9 +111,7 @@
               </h1>
             </header> -->
             <main>
-              <div class="wdc-text-container">
-                  {{desc}}
-              </div>
+              <div class="wdc-text-container" v-html="desc"></div>
             </main>
         </section>
 

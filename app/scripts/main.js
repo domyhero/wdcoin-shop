@@ -12,16 +12,12 @@ var pageSell = new Vue({
     el: '.page-sell',
     created: function() {
         this.$dispatch('child-created', this);
-        $.ajax({
-            jsonp: 'callBack',
-            url: APIHost + 'propgoods',
-            contentType: 'application/json',
-            dataType: 'jsonp',
-            success: function(data) {
-                pageSell.$data = JSON.parse(data.basicJson);
-                readyToShow(pageSell);
+        fetchPageSellData();
+        window.setInterval(function() {
+            if (location.hash && location.hash === '#page-sell') {
+                fetchPageSellData();
             }
-        });
+        }, 4000);
     },
     methods: {
         triggerBuy: function(item) {
@@ -48,6 +44,7 @@ var pageSell = new Vue({
                         return;
                     }
                     if (data.basicJson) {
+                        toast('为避免订单失效，请在 15 分钟内进行支付')
                         invokeNativePay($.extend({
                             action: 'pay',
                             appId: '100008453',
@@ -142,8 +139,8 @@ function backToSell() {
 }
 
 var pageTitleDict = {
-    'page-about': '闪电发货，双倍赔付承诺',
-    'page-sell': '豌豆荚道具商城',
+    'page-about': '闪电发货、双倍赔付承诺',
+    'page-sell': '豌豆币道具商城',
     'page-my': '我购买到的商品'
 };
 
@@ -154,6 +151,23 @@ function switchToPage(page) {
     // document.title update
     document.title = pageTitleDict[page];
     location.hash = page;
+}
+
+function toast(msg) {
+    window.campaignPlugin.toast(msg);
+}
+
+function fetchPageSellData() {
+    $.ajax({
+        jsonp: 'callBack',
+        url: APIHost + 'propgoods',
+        contentType: 'application/json',
+        dataType: 'jsonp',
+        success: function(data) {
+            pageSell.$data = JSON.parse(data.basicJson);
+            readyToShow(pageSell);
+        }
+    });
 }
 
 function initNativePay() {
@@ -219,11 +233,10 @@ if (!window.campaignPlugin) {
             window.alert(msg);
         }
     }
-} else {
-    if (!window.campaignPlugin.startActivity) {
-        window.campaignPlugin.startActivity = function() {
-            pmtAlert('对不起您还不支持...');
-        }
+}
+if (!window.campaignPlugin.startActivity) {
+    window.campaignPlugin.startActivity = function() {
+        pmtAlert('对不起您还不支持...');
     }
 }
 initNativePay();
@@ -257,7 +270,7 @@ initNativePay();
     // get wdj_auth from bannner to set it
     var _auth = window.cookieManager.getCookie('wdj_auth');
     window.wdc_isLogin = false;
-    if (_auth) {
+    if (_auth && _auth !== 'false') {
         window.wdc_isLogin = true;
         window.cookieManager.setCookie('wdj_auth', _auth, 2020, 1, 1, '/', 'wandoujia.com');
     }
