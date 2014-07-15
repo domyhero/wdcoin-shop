@@ -16,9 +16,10 @@
     </head>
     <body>
       <footer>
+        <p class="tip" v-show="currentPage === 'page-sell'">如果点击购买没有反应，请升级到最新版的<a href="http://www.wandoujia.com/">豌豆荚客户端</a></p><hr>
         <div class="menu">
           <span v-on="click: switchTo('page-about')">
-            闪电发货，双倍赔付承诺
+            闪电发货、双倍赔付承诺
           </span>
           <span v-on="click: switchTo('page-my')">
             我购买到的商品
@@ -60,7 +61,6 @@
                     v-on="click: triggerBuy(item)">购买</button>
                 </div>
               </div>
-              <p class="tip">温馨提示：如果点击购买没有反应，请升级到最新版的豌豆荚客户端</p>
             </div>
         </section>
 
@@ -97,7 +97,7 @@
                   </div>
                 </div>
               </div>
-              <div v-show="!list.length">
+              <div class="wdc-text-container" v-show="!list.length">
                 <p>您还没有购买任何道具。</p>
               </div>
             </div>
@@ -110,9 +110,9 @@
                 闪电发货，双倍赔付承诺
               </h1>
             </header> -->
-            <main>
+            <div class="main">
               <div class="wdc-text-container" v-html="desc"></div>
-            </main>
+            </div>
         </section>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -126,8 +126,9 @@
          -->
 
         <!-- build:js script.js -->
-        <script src="bower_components/zepto/zepto.js"></script>
+        <script src="scripts/zepto.custom.js"></script>
         <script src="bower_components/vue/dist/vue.js"></script>
+        <script src="scripts/account-sdk.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
 </body>

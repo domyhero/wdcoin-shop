@@ -20,12 +20,13 @@ body {
   color: #333;
 }
 a {
-    color: #38d;
-
+    color: #2f7c2f;
     &:hover {
-        text-decoration: none;
+        color: #3baa24;
+        text-decoration: underline;
     }
 }
+
 em {
     font-style: normal;
 }
@@ -91,7 +92,7 @@ header{
 
 .main {
     margin-top: 10px;
-    margin-bottom: 40px;
+    margin-bottom: 120px;
     .wdc-card {
         margin: 22px 20px;
         padding: 25px 30px 8px 30px;
@@ -234,12 +235,12 @@ footer {
     text-align: center;
     z-index: 1000;
     width: 100%;
-
+    background: #ccc;
+    opacity: .9;
     .menu {
         height: 45px;
         line-height: 45px;
         font-size: 18px;
-        background: #ccc;
 
         @media (max-width: 420px) {
             height: 35px;
@@ -253,13 +254,14 @@ footer {
         display: inline-block;
         width: 50%;
     }
+
+    .tip{
+        font-size: 13px;
+        color: #999;
+        margin: 8px;
+    }
 }
 
 .font-mini{
     font-size: 12px;
-}
-
-.tip{
-    font-size: 13px;
-    color: #999;
 }

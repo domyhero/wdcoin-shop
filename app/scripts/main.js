@@ -183,6 +183,12 @@ function invokeNativeLogin() {
     window.campaignPlugin.startActivity('intent:#Intent;launchFlags=0x10000000;component=com.wandoujia.phoenix2/com.wandoujia.p4.account.activity.PhoenixAccountActivity;end');
 }
 
+function invokeWebLogin() {
+    SnapPea.AccountHook.openAsync('login').then(function() {
+        initWdjAuth();
+    });
+}
+
 function pmtAlert(msg, isLogin) {
     var tpl =
         ['<div class="pmt-popup pmt-popup-alert">',
@@ -207,24 +213,34 @@ function pmtAlert(msg, isLogin) {
     });
     $alert.find('.popup-ctrl .login').click(function() {
         // remove it
-        invokeNativeLogin();
+        $alert.remove();
+        invokeWebLogin();
     });
 
     // append to body
     $('body').append($alert);
 }
 
+function initWdjAuth(fromBanner) {
+    // get wdj_auth from bannner to set it
+    if(fromBanner) {
+        var _auth = window.cookieManager.getCookie('wdj_auth');
+        window.wdc_isLogin = false;
+        if (_auth && _auth !== 'false') {
+            window.wdc_isLogin = true;
+            window.cookieManager.setCookie('wdj_auth', _auth, 2020, 1, 1, '/', 'wandoujia.com');
+        }
+    } else {
+        // cookie by account sdk is saved .wandoujia domain
+        window.wdc_isLogin = true;
+    }
+
+}
+
 $(window).on('hashchange', function(e) {
     var page = location.hash || '#page-sell';
     switchToPage(page.replace('#', ''));
 });
-
-// $(window).on('scroll', function() {
-//     $('footer').css('top', window.innerHeight - $('footer').height() + window.scrollY);
-// });
-
-// init
-// $('footer').css('top', window.innerHeight - $('footer').height() + window.scrollY);
 
 // polyfill toast
 if (!window.campaignPlugin) {
@@ -267,13 +283,7 @@ initNativePay();
         }
     };
 
-    // get wdj_auth from bannner to set it
-    var _auth = window.cookieManager.getCookie('wdj_auth');
-    window.wdc_isLogin = false;
-    if (_auth && _auth !== 'false') {
-        window.wdc_isLogin = true;
-        window.cookieManager.setCookie('wdj_auth', _auth, 2020, 1, 1, '/', 'wandoujia.com');
-    }
+    initWdjAuth(true);
 
     // get uid by account http
     // $.ajax({
