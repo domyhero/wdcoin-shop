@@ -1,22 +1,20 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>豌豆币道具商城</title>
         <meta name="description" content="豌豆币道具商城">
         <meta name="viewport" content="width=device-width, user-scalable=no">
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <!-- build:css style.css -->
         <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
     </head>
     <body>
+
       <footer>
-        <p class="tip" v-show="currentPage === 'page-sell'">如果点击购买没有反应，请升级到最新版的<a href="http://www.wandoujia.com/">豌豆荚客户端</a></p><hr>
+        <p class="tip" v-show="currentPage === 'page-sell'">如果点击购买没有反应，请升级到最新版的<a href="http://www.wandoujia.com/">豌豆荚客户端</a></p>
+        <hr v-show="currentPage === 'page-sell'">
         <div class="menu">
           <span v-on="click: switchTo('page-about')">
             闪电发货、双倍赔付承诺
@@ -27,18 +25,19 @@
         </div>
       </footer>
 
+      <div class="slide-left" v-show="currentPage === 'page-sell'" v-transition>
         <section class="wdc-page page-sell" v-cloak>
-            <!-- v-class="wdc-page-current: $parent.currnetPage == 'page-sell'"> -->
             <header>
               <div class="banner-container">
+                <img src="http://cdn.pingwest.com/wp-content/uploads/2014/06/Screen-Shot-2014-06-29-at-7.56.48-PM.png-300x0" alt="刀塔传奇超值道具" class="popup">
                 <h1><span>刀塔传奇超值道具<br>豌豆荚火热开卖！</span></h1>
-                <img src="http://cdn.pingwest.com/wp-content/uploads/2014/06/Screen-Shot-2014-06-29-at-7.56.48-PM.png-300x0" alt="刀塔传奇超值道具">
               </div>
             </header>
             <div class="main">
-              <div v-repeat="item : list" class="wdc-card wdc-card-sell">
+              <div v-repeat="item : list" v-transition
+                class="wdc-card wdc-card-sell slide-top">
                 <div class="wdc-card-left">
-                  <img v-attr="src: item.iconUrl, alt: item.name">
+                  <img v-attr="src: item.iconUrl, alt: item.name" class="popup">
                 </div>
                 <div class="wdc-card-main">
                   <!-- use item.title etc here -->
@@ -63,19 +62,16 @@
               </div>
             </div>
         </section>
+      </div>
 
+      <div class="slide-left" v-show="currentPage === 'page-my'" v-transition>
         <section class="wdc-page page-my" v-cloak>
-            <!-- <header>
-              <h1>
-                <i class="w-icon-back" v-on="click: backToSell()">&#10094;</i>我购买到的商品
-              </h1>
-            </header> -->
-
             <div class="main">
               <div v-show="list.length">
-                <div v-repeat="item : list" class="wdc-card wdc-card-self">
+                <div v-repeat="item : list" v-transition
+                  class="wdc-card wdc-card-self slide-top">
                   <div class="wdc-card-left">
-                    <img v-attr="src: item.iconUrl, alt: item.name">
+                    <img v-attr="src: item.iconUrl, alt: item.name" class="popup">
                   </div>
                   <div class="wdc-card-main">
                     <!-- use item.title etc here -->
@@ -102,18 +98,15 @@
               </div>
             </div>
         </section>
+      </div>
 
+      <div class="slide-left" v-show="currentPage === 'page-about'" v-transition>
         <section class="wdc-page page-about" v-cloak>
-            <!-- <header>
-              <h1>
-                  <i class="w-icon w-icon-back" v-on="click: backToSell()">&#8592;</i>
-                闪电发货，双倍赔付承诺
-              </h1>
-            </header> -->
             <div class="main">
               <div class="wdc-text-container" v-html="desc"></div>
             </div>
         </section>
+      </div>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <!--
