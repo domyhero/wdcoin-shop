@@ -1,0 +1,84 @@
+/* ------------------------------------------- */
+/* Mixins
+/* ------------------------------------------- */
+
+@import "compass";
+
+@mixin transitionDuration ($duration) {
+    transition-duration: $duration;
+    -webkit-transition-duration: $duration;
+}
+
+@mixin easingTimingFunction () {
+    -webkit-transition: all 0 cubic-bezier(0.250, 0.460, 0.450, 0.940);
+    -moz-transition: all 0 cubic-bezier(0.250, 0.460, 0.450, 0.940);
+    -ms-transition: all 0 cubic-bezier(0.250, 0.460, 0.450, 0.940);
+     -o-transition: all 0 cubic-bezier(0.250, 0.460, 0.450, 0.940);
+        transition: all 0 cubic-bezier(0.250, 0.460, 0.450, 0.940); /* easeOutQuad */
+
+    -webkit-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940);
+    -moz-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940);
+    -ms-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940);
+     -o-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940);
+        transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); /* easeOutQuad */
+}
+
+
+/* ------------------------------------------- */
+/* Slide Down
+/* ------------------------------------------- */
+
+.scale-fade {
+    @include easingTimingFunction();
+    @include transitionDuration(350ms);
+    @include transform(scale(1));
+    opacity: 1;
+
+    &.v-enter, &.v-leave {
+        @include transform(scale(0.7));
+        opacity: 0;
+    }
+}
+
+.slide-top {
+    @include easingTimingFunction();
+    @include transform(translateY(0));
+    @include transitionDuration(550ms);
+    opacity: 1;
+
+    &.v-enter, &.v-leave  {
+        @include transform(translateY(60px));
+        opacity: 0;
+    }
+    &.disable-animate {
+        opacity: 1!important;
+        -webkit-transform: none!important;
+        transform: none!important;
+    }
+}
+
+.slide-left {
+    @include easingTimingFunction();
+    @include transform(translateX(0));
+    @include transitionDuration(550ms);
+    opacity: 1;
+
+    &.v-enter {
+        @include transform(translateX(60px));
+        opacity: 0;
+    }
+    &.v-leave {
+        opacity: 0;
+    }
+}
+
+.popup {
+    @include easingTimingFunction();
+    @include transitionDuration(350ms);
+    @include transform(scale(0.7));
+    opacity: 0;
+    &.loaded {
+        @include transform(scale(1));
+        opacity: 1;
+    }
+}
