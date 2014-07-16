@@ -2,6 +2,7 @@ $green: #00b93a;
 $yellow: #F90;
 
 @import "compass";
+@import "./animate";
 
 // components
 .w-icon{
@@ -9,10 +10,6 @@ $yellow: #F90;
     height: 18px;
     width: 18px;
     vertical-align: middle;
-}
-
-.w-icon-back{
-
 }
 
 .w-btn{
@@ -48,7 +45,7 @@ $yellow: #F90;
     width: 100%;
     height: 100%;
     text-align: center;
-    background: rgba(0, 0, 0, .5);
+    background: rgba(0, 0, 0, 0);
     position: fixed;
     z-index: 100;
     top: 0;
@@ -62,7 +59,6 @@ $yellow: #F90;
     }
 }
 .pmt-popup-alert {
-
     .popup-container {
         width: 70%;
         margin: 30px 25px 20px 25px;

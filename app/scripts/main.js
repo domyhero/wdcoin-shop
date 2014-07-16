@@ -8,14 +8,22 @@ TODO:
 4 viewChange 的动画（loading indicator, 等）
 */
 
+var pageTitleDict = {
+    'page-about': '闪电发货、双倍赔付承诺',
+    'page-sell': '豌豆币道具商城',
+    'page-my': '我购买到的商品'
+};
+
 var pageSell = new Vue({
     el: '.page-sell',
     created: function() {
         this.$dispatch('child-created', this);
-        fetchPageSellData();
+        fetchPageSellData(false);
+        var self = this;
         window.setInterval(function() {
             if (location.hash && location.hash === '#page-sell') {
-                fetchPageSellData();
+                pageSell.$data.disAnimate = true;
+                fetchPageSellData(true);
             }
         }, 4000);
     },
@@ -129,43 +137,39 @@ var App = new Vue({
     }
 });
 
-function readyToShow(page) {
-    $('.wdc-page-current').removeClass('wdc-page-current');
-    $(page.$el).addClass('wdc-page-current');
-}
-
 function backToSell() {
     switchToPage('page-sell');
 }
 
-var pageTitleDict = {
-    'page-about': '闪电发货、双倍赔付承诺',
-    'page-sell': '豌豆币道具商城',
-    'page-my': '我购买到的商品'
-};
-
 function switchToPage(page) {
     $('body').scrollTop(0);
-    $('.wdc-page-current').removeClass('wdc-page-current');
-    $('.' + page).addClass('wdc-page-current');
+    // $('.wdc-page-current').removeClass('wdc-page-current');
+    // $('.' + page).addClass('wdc-page-current');
     // document.title update
     document.title = pageTitleDict[page];
     location.hash = page;
+    App.$data.currentPage = page;
 }
 
 function toast(msg) {
     window.campaignPlugin.toast(msg);
 }
 
-function fetchPageSellData() {
+function fetchPageSellData(update) {
     $.ajax({
         jsonp: 'callBack',
         url: APIHost + 'propgoods',
         contentType: 'application/json',
         dataType: 'jsonp',
         success: function(data) {
-            pageSell.$data = JSON.parse(data.basicJson);
-            readyToShow(pageSell);
+            if (update) {
+                var data = JSON.parse(data.basicJson);
+                data.list.forEach(function(item, i) {
+                    pageSell.$data.list[i].inventoryCount = item.inventoryCount;
+                });
+            } else {
+                pageSell.$data = JSON.parse(data.basicJson);
+            }
         }
     });
 }
@@ -191,7 +195,7 @@ function invokeWebLogin() {
 
 function pmtAlert(msg, isLogin) {
     var tpl =
-        ['<div class="pmt-popup pmt-popup-alert">',
+        ['<div class="pmt-popup pmt-popup-alert popup">',
         '<div class="popup-container">',
         '<div class="popup-content">',
         '<p>{{msg}}</p>',
@@ -207,23 +211,35 @@ function pmtAlert(msg, isLogin) {
         $alert.find('.popup-ctrl').prepend('<button class="w-btn w-btn-primary login">去登录</button>');
     }
 
-    $alert.find('.popup-ctrl .cancel').click(function() {
+    var removed = false;
+    $alert.find('.popup-ctrl .w-btn').click(function() {
         // remove it
-        $alert.remove();
+        $alert.removeClass('loaded');
+        $alert.on('webkitTransitionEnd', function() {
+            if (removed) return;
+            $alert.remove();
+            removed = true;
+        });
+        setTimeout(function() {
+            if (removed) return;
+            $alert.remove();
+            removed = true;
+        }, 800);
     });
     $alert.find('.popup-ctrl .login').click(function() {
         // remove it
-        $alert.remove();
         invokeWebLogin();
     });
 
     // append to body
+    $alert.hide().addClass('loaded');
     $('body').append($alert);
+    $alert.show();
 }
 
 function initWdjAuth(fromBanner) {
     // get wdj_auth from bannner to set it
-    if(fromBanner) {
+    if (fromBanner) {
         var _auth = window.cookieManager.getCookie('wdj_auth');
         window.wdc_isLogin = false;
         if (_auth && _auth !== 'false') {
@@ -234,13 +250,7 @@ function initWdjAuth(fromBanner) {
         // cookie by account sdk is saved .wandoujia domain
         window.wdc_isLogin = true;
     }
-
 }
-
-$(window).on('hashchange', function(e) {
-    var page = location.hash || '#page-sell';
-    switchToPage(page.replace('#', ''));
-});
 
 // polyfill toast
 if (!window.campaignPlugin) {
@@ -255,42 +265,46 @@ if (!window.campaignPlugin.startActivity) {
         pmtAlert('对不起您还不支持...');
     }
 }
-initNativePay();
 
-// cookie related
-(function() {
-    // get & set wdj_auth,
-    window.cookieManager = {
-        getCookie: function(name) {
-            var pattern = RegExp(name + "=.[^;]*")
-            matched = document.cookie.match(pattern)
-            if (matched) {
-                var cookie = matched[0].split('=')
-                return cookie[1]
-            }
-            return false
-        },
-        setCookie: function(name, value, exp_y, exp_m, exp_d, path, domain, secure) {
-            var cookie_string = name + "=" + escape(value);
-            if (exp_y) {
-                var expires = new Date(exp_y, exp_m, exp_d);
-                cookie_string += "; expires=" + expires.toGMTString();
-            }
-            if (path) cookie_string += "; path=" + escape(path);
-            if (domain) cookie_string += "; domain=" + escape(domain);
-            if (secure) cookie_string += "; secure";
-            document.cookie = cookie_string;
+// get & set wdj_auth,
+window.cookieManager = {
+    getCookie: function(name) {
+        var pattern = RegExp(name + "=.[^;]*")
+        matched = document.cookie.match(pattern)
+        if (matched) {
+            var cookie = matched[0].split('=')
+            return cookie[1]
         }
-    };
+        return false
+    },
+    setCookie: function(name, value, exp_y, exp_m, exp_d, path, domain, secure) {
+        var cookie_string = name + "=" + escape(value);
+        if (exp_y) {
+            var expires = new Date(exp_y, exp_m, exp_d);
+            cookie_string += "; expires=" + expires.toGMTString();
+        }
+        if (path) cookie_string += "; path=" + escape(path);
+        if (domain) cookie_string += "; domain=" + escape(domain);
+        if (secure) cookie_string += "; secure";
+        document.cookie = cookie_string;
+    }
+};
 
+// trigger after dom ready
+(function() {
+    initNativePay();
     initWdjAuth(true);
-
-    // get uid by account http
-    // $.ajax({
-    //     dataType: 'jsonp',
-    //     url: 'https://account.wandoujia.com/v4/api/profile',
-    //     success: function(resp) {
-    //         var uid = resp.member ? resp.member.uid : '';
-    //     }
-    // });
 })();
+
+$(window).on('hashchange', function(e) {
+    var page = location.hash || '#page-sell';
+    switchToPage(page.replace('#', ''));
+});
+
+// image load animation
+// Add classes to fade-in images
+document.addEventListener('load', function(event) {
+    if (event.target.classList.contains('popup')) {
+        event.target.classList.add('loaded');
+    }
+}, true);
