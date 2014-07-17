@@ -13,14 +13,14 @@
     <body>
 
       <footer>
-        <p class="tip" v-show="currentPage === 'page-sell'">如果点击购买没有反应，请升级到最新版的<a href="http://www.wandoujia.com/">豌豆荚客户端</a></p>
+        <p class="tip" v-show="currentPage === 'page-sell'">如果点击购买没有反应，请升级到最新版的<a v-on="click: downloadWdj()">豌豆荚客户端</a></p>
         <hr v-show="currentPage === 'page-sell'">
         <div class="menu">
           <span v-on="click: switchTo('page-about')">
             闪电发货、双倍赔付承诺
           </span>
           <span v-on="click: switchTo('page-my')">
-            我购买到的商品
+            我购买的商品
           </span>
         </div>
       </footer>
@@ -29,8 +29,7 @@
         <section class="wdc-page page-sell" v-cloak>
             <header>
               <div class="banner-container">
-                <img src="http://cdn.pingwest.com/wp-content/uploads/2014/06/Screen-Shot-2014-06-29-at-7.56.48-PM.png-300x0" alt="刀塔传奇超值道具" class="popup">
-                <h1><span>刀塔传奇超值道具<br>豌豆荚火热开卖！</span></h1>
+                <img src="http://img.wdjimg.com/static-files/test/bn960260.jpg" alt="刀塔传奇超值道具" class="popup">
               </div>
             </header>
             <div class="main">

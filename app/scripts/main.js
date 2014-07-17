@@ -11,7 +11,7 @@ TODO:
 var pageTitleDict = {
     'page-about': '闪电发货、双倍赔付承诺',
     'page-sell': '豌豆币道具商城',
-    'page-my': '我购买到的商品'
+    'page-my': '我购买的商品'
 };
 
 var pageSell = new Vue({
@@ -31,7 +31,8 @@ var pageSell = new Vue({
         triggerBuy: function(item) {
             // 购买单品
             if (!window.wdc_isLogin) {
-                pmtAlert('请您先到客户端登录豌豆荚帐号', true);
+                // pmtAlert('请您先到客户端登录豌豆荚帐号', true);
+                invokeLoginNotice();
                 return;
             }
             $.ajax({
@@ -109,7 +110,8 @@ var App = new Vue({
         switchTo: function(page) {
             if (page === 'page-my') {
                 if (!window.wdc_isLogin) {
-                    pmtAlert('请您先到客户端登录豌豆荚帐号', true);
+                    // pmtAlert('请您先到客户端登录豌豆荚帐号', true);
+                    invokeLoginNotice();
                     return;
                 } else {
                     // 获取自己的列表，存入 scope
@@ -133,6 +135,10 @@ var App = new Vue({
                 }
             }
             switchToPage(page);
+        },
+        downloadWdj: function() {
+            toast('开始下载...');
+            window.campaignPlugin.download('http://dl.wandoujia.com/files/phoenix/latest/wandoujia-wandoujia_web.apk?timestamp=1405589108004', '豌豆荚', 1);
         }
     }
 });
@@ -193,6 +199,10 @@ function invokeWebLogin() {
     });
 }
 
+function invokeLoginNotice() {
+    pmtAlert('您还未登录，请先登录再回来购买商品。<br/><img src="http://img.wdjimg.com/static-files/games/login-notice-2.png">');
+}
+
 function pmtAlert(msg, isLogin) {
     var tpl =
         ['<div class="pmt-popup pmt-popup-alert popup">',
@@ -200,16 +210,16 @@ function pmtAlert(msg, isLogin) {
         '<div class="popup-content">',
         '<p>{{msg}}</p>',
         '<div class="popup-ctrl">',
-        '<button class="w-btn cancel">我知道了</button>',
+        '<button class="w-btn w-btn-primary">我知道了</button>',
         '</div></div></div></div>'
     ].join('');
 
     tpl = tpl.replace('{{msg}}', msg);
 
     var $alert = $(tpl);
-    if (isLogin) {
-        $alert.find('.popup-ctrl').prepend('<button class="w-btn w-btn-primary login">去登录</button>');
-    }
+    // if (isLogin) {
+    //     $alert.find('.popup-ctrl').prepend('<button class="w-btn w-btn-primary login">去登录</button>');
+    // }
 
     var removed = false;
     $alert.find('.popup-ctrl .w-btn').click(function() {
@@ -226,10 +236,10 @@ function pmtAlert(msg, isLogin) {
             removed = true;
         }, 800);
     });
-    $alert.find('.popup-ctrl .login').click(function() {
-        // remove it
-        invokeWebLogin();
-    });
+    // $alert.find('.popup-ctrl .login').click(function() {
+    //     // remove it
+    //     invokeWebLogin();
+    // });
 
     // append to body
     $alert.hide().addClass('loaded');
@@ -298,7 +308,9 @@ window.cookieManager = {
 
 $(window).on('hashchange', function(e) {
     var page = location.hash || '#page-sell';
-    switchToPage(page.replace('#', ''));
+    var toPage = page.replace('#', '');
+    if (toPage === App.$data.currentPage) return;
+    switchToPage(toPage);
 });
 
 // image load animation
