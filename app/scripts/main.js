@@ -43,6 +43,7 @@ var pageSell = new Vue({
                 data: {
                     goodsId: item.id
                 },
+                timeout: 5000,
                 success: function(data) {
                     if (data.errorCode !== 'SUCCESS') {
                         if (data.errorMsg) {
@@ -68,6 +69,9 @@ var pageSell = new Vue({
                         pmtAlert('该商品已经被抢光了，再去看看其他商品吧');
                     }
                     // bind to scope
+                },
+                error: function() {
+                    pmtAlert('网络超时，请稍后再试');
                 }
             });
             // or invoke intent for buy item
@@ -94,8 +98,12 @@ var pageAbout = new Vue({
             url: APIHost + 'instruction',
             contentType: 'application/json',
             dataType: 'jsonp',
+            timeout: 5000,
             success: function(data) {
                 pageAbout.$data.desc = data.basicJson;
+            },
+            error: function() {
+                pmtAlert('网络超时，请稍后再试');
             }
         });
     }
@@ -120,6 +128,7 @@ var App = new Vue({
                         url: APIHost + 'boughtgoods',
                         contentType: 'application/json',
                         dataType: 'jsonp',
+                        timeout: 5000,
                         success: function(data) {
                             if (data.errorCode !== 'SUCCESS') {
                                 if (data.errorMsg) {
@@ -130,6 +139,9 @@ var App = new Vue({
                                 return;
                             }
                             pageMy.$data = JSON.parse(data.basicJson);
+                        },
+                        error: function() {
+                            pmtAlert('网络超时，请稍后再试');
                         }
                     });
                 }
@@ -167,6 +179,7 @@ function fetchPageSellData(update) {
         url: APIHost + 'propgoods',
         contentType: 'application/json',
         dataType: 'jsonp',
+        timeout: 5000,
         success: function(data) {
             if (update) {
                 var data = JSON.parse(data.basicJson);
@@ -176,6 +189,9 @@ function fetchPageSellData(update) {
             } else {
                 pageSell.$data = JSON.parse(data.basicJson);
             }
+        },
+        error: function() {
+            pmtAlert('网络超时，请稍后再试');
         }
     });
 }
