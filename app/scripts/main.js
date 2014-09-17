@@ -54,7 +54,9 @@ var pageSell = new Vue({
                         return;
                     }
                     if (data.basicJson) {
-                        toast('为避免订单失效，请在 15 分钟内进行支付')
+                        toast('为避免订单失效，请在 15 分钟内进行支付');
+                        // GA: buy with uid, udid
+                        _gaq.push(['_trackEvent', 'wdcoin', 'beforePayUid', window._uid]);
                         invokeNativePay($.extend({
                             action: 'pay',
                             appId: '100008453',
@@ -233,9 +235,6 @@ function pmtAlert(msg, isLogin) {
     tpl = tpl.replace('{{msg}}', msg);
 
     var $alert = $(tpl);
-    // if (isLogin) {
-    //     $alert.find('.popup-ctrl').prepend('<button class="w-btn w-btn-primary login">去登录</button>');
-    // }
 
     var removed = false;
     $alert.find('.popup-ctrl .w-btn').click(function() {
@@ -252,10 +251,6 @@ function pmtAlert(msg, isLogin) {
             removed = true;
         }, 800);
     });
-    // $alert.find('.popup-ctrl .login').click(function() {
-    //     // remove it
-    //     invokeWebLogin();
-    // });
 
     // append to body
     $alert.hide().addClass('loaded');
@@ -270,6 +265,8 @@ function initWdjAuth(fromBanner) {
         window.wdc_isLogin = false;
         if (_auth && _auth !== 'false') {
             window.wdc_isLogin = true;
+            // set wdj uid
+            setWdjUid();
             window.cookieManager.setCookie('wdj_auth', _auth, 2020, 1, 1, '/', 'wandoujia.com');
         }
     } else {
@@ -316,8 +313,27 @@ window.cookieManager = {
     }
 };
 
+window._uid = '';
+
+function setWdjUid() {
+    $.ajax({
+        dataType: 'jsonp',
+        url: 'https://account.wandoujia.com/v4/api/profile',
+        success: function(resp) {
+            _uid = resp.member ? resp.member.uid : '';
+        }
+    });
+}
+
+window._udid = '';
+if (window.campaignPlugin.getUDID) {
+    _udid = window.campaignPlugin.getUDID();
+}
+
 // trigger after dom ready
 (function() {
+    // GA: page view load?! with udid
+    _gaq.push(['_trackEvent', 'wdcoin', 'afterViewUdid', window._udid]);
     initNativePay();
     initWdjAuth(true);
 })();
